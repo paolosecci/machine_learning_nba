@@ -1,45 +1,31 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
-#dependencies
 from flask import Flask, jsonify
-
-
-# In[2]:
-
-
-#setup falsk app
 app = Flask(__name__)
-
-
-# In[3]:
-
 
 @app.route("/")
 def index():
     """return index.html"""
     return render_template("index.html")
 
+@app.route("/data")
 def get_nba_gamelog():
-    from splinter import Browser
-    from bs4 import BeautifulSoup
+    import requests
+    USER_AGENT = (
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) ' +
+        'AppleWebKit/537.36 (KHTML, like Gecko) ' +
+        'Chrome/61.0.3163.100 Safari/537.36'
+    )
+    REQUEST_HEADERS = {
+        'user-agent': USER_AGENT,
+    }
     
-    get_ipython().system('which chromedriver')
-    executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-    browser = Browser('chrome', **executable_path, headless=False)
+    
     url = "https://stats.nba.com/stats/leaguegamelog?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=2018-19&SeasonType=Regular+Season&Sorter=DATE"
     
-    browser.visit(url)
+    re = requests.get(url, headers=REQUEST_HEADERS, allow_redirects=False, timeout=15)
+    print(re.status_code)
     
-    html = browser.html
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    nba_data = soup.find("pre").text
-    
-    return jsonify(nba_data)
+    nba_data = re.json()
+    return nba_json
 
 if __name__ == "__main__":
     app.run()
