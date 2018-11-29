@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, render_template
 import pandas as pd
 import datetime
+import sys
+sys.setrecursionlimit(10000)
+
 app = Flask(__name__)
 
 #FUNCTIONS
@@ -43,7 +46,7 @@ def make_days_since_col(df):
     df['DAYS_SINCE_RN'] = days_since_arr
     return df
 
-def get_team_df(team):
+def get_team_df(team, df):
     team_df = df[df['TEAM_ABBREVIATION']==team]
     return team_df
 
@@ -51,22 +54,37 @@ def get_player_df(player):
     player_df = df[df['PLAYER_NAME']==player]
     return player_df
 
+def get_team_json(team_abbr):
+    nba_json = get_data()
+    df = clean_df(make_json_df(nba_json))
+    df = make_days_since_col(df)
+    team_df = get_team_df(team_abbr, df)
+    team_json = team_df.to_json()
+    return team_json
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/data")
-def get_data():
+def get_nba_json():
     return jsonify(get_data())
 
 @app.route("/<team_abbr>")
 def get_team_data(team_abbr):
+    return jsonify(get_team_json(team_abbr))
+
+@app.route("/<team_abbr>/players")
+def get_team_players(team_abbr):
     nba_json = get_data()
     df = clean_df(make_json_df(nba_json))
     df = make_days_since_col(df)
-    team_df = get_team_df(team_abbr)
-    team_json = team_df.to_json()
-    return jsonify(team_json)
+    team_df = get_team_df(team_abbr, df)
+    players = team_df['PLAYER_NAME'].unique()
+    player_list = []
+    for player in players:
+        player_list.append(player)
+    return jsonify(player_list)
 
 if __name__ == "__main__":
     app.run()
