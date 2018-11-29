@@ -1,8 +1,6 @@
 from flask import Flask, jsonify, render_template
 import pandas as pd
 import datetime
-import sys
-sys.setrecursionlimit(10000)
 
 app = Flask(__name__)
 
@@ -70,7 +68,7 @@ def index():
 def get_nba_json():
     return jsonify(get_data())
 
-@app.route("/<team_abbr>")
+@app.route("/<team_abbr>/data")
 def get_team_data(team_abbr):
     return jsonify(get_team_json(team_abbr))
 
@@ -85,6 +83,17 @@ def get_team_players(team_abbr):
     for player in players:
         player_list.append(player)
     return jsonify(player_list)
+
+@app.route("/get_teams")
+def get_teams():
+    nba_json = get_data()
+    df = clean_df(make_json_df(nba_json))
+    teams = df['TEAM_ABBREVIATION'].unique()
+    team_list = []
+    for team in teams:
+        team_list.append(team)
+    return jsonify(team_list)
+    
 
 if __name__ == "__main__":
     app.run()
