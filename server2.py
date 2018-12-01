@@ -48,7 +48,7 @@ def get_team_df(team, df):
     team_df = df[df['TEAM_ABBREVIATION']==team]
     return team_df
 
-def get_player_df(player):
+def get_player_df(player, df):
     player_df = df[df['PLAYER_NAME']==player]
     return player_df
 
@@ -59,6 +59,30 @@ def get_team_json(team_abbr):
     team_df = get_team_df(team_abbr, df)
     team_json = team_df.to_json()
     return team_json
+
+def predict_stat(player, stat, df):
+    player_df = get_player_df(player, df)
+    sum_days = 0
+    for num_days in player_df['DAYS_SINCE_RN']:
+        sum_days += num_days
+    sum_days
+    importances = []
+    for num_days in player_df['DAYS_SINCE_RN']:
+        importance = ((sum_days - num_days)/sum_days)
+        importances.append(importance**3)
+    stat_ser = player_df[stat]
+    stats = []
+    for stat in stat_ser:
+        stats.append(int(stat))
+    scores = []
+    for i in range(len(stats)):
+        score = importances[i]*stats[i]
+        scores.append(score)
+    sum_importance = 0
+    for imp in importances:
+        sum_importance += imp
+    p_stat = sum(scores)/sum_importance
+    return round(p_stat, 3)
 
 @app.route("/")
 def index():
@@ -93,6 +117,24 @@ def get_teams():
     for team in teams:
         team_list.append(team)
     return jsonify(team_list)
+
+@app.route("predict/<team>")
+def predict(team):
+    nba_json = get_data()
+    df = clean_df(make_json_df(nba_json))
+    df = make_days_since_col(df)
+    team_df = get_team_df(team, df)
+    players = team_df['PLAYER_NAME'].unique()
+    
+    p_json_out = []
+    for player in players:
+        p_json_out.append({ player: {
+            'PTS': predict_stat(player, 'PTS', team_df),
+            'AST': predict_stat(player, 'AST', team_df),
+            'REB': predict_stat(player, 'REB', team_df)
+        }})
+        
+    return jsonify(p_json_out)
     
 
 if __name__ == "__main__":

@@ -8,7 +8,8 @@ function playerStats(team) {
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data).forEach((player) => {
-      PANEL.append("h6").text(`${player}`);
+        console.log(player[1])
+        //PANEL.append("h6").text(`${player[1]}`);
     });
   });
 }
@@ -23,7 +24,7 @@ function playerStats2(team) {
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data).forEach((player) => {
-      PANEL2.append("h6").text(`${player}`);
+      PANEL2.append("h6").text(`${player[1]}`);
     });
   });
 }
