@@ -68,7 +68,7 @@ def predict_stat(player, stat, df):
     importances = []
     for num_days in player_df['DAYS_SINCE_RN']:
         importance = ((sum_days - num_days)/sum_days)
-        importances.append(importance**3)
+        importances.append(importance**4)
     sum_days
     stat_ser = player_df[stat]
     stats = []
@@ -86,7 +86,7 @@ def predict_stat(player, stat, df):
     else:
         p_stat = sum(scores)/sum_importance
         return round(p_stat, 2)
-    
+
 def predict_lineup(team_df):
     lineup_df = team_df[team_df['DAYS_SINCE_RN']<=7]
     players = lineup_df['PLAYER_NAME'].unique()
@@ -155,7 +155,7 @@ def predict(team):
         sum_pts += p_pts
     json_out = [sum_pts, p_json_out]
     return jsonify(json_out)
-    
+
 
 if __name__ == "__main__":
     app.run()
