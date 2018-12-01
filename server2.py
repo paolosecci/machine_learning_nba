@@ -118,7 +118,7 @@ def get_teams():
     team_list = []
     for team in teams:
         team_list.append(team)
-    return jsonify(team_list)
+    return jsonify(sorted(team_list))
 
 @app.route("/predict/<team>")
 def predict(team):
