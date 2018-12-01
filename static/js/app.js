@@ -51,13 +51,53 @@ function playerStats2(team) {
     });
     PANEL2team.append("h2").text(data[0]);
 
+    console.log('setting ', team, ' score');
+
     team2_score = data[0];
+
+    console.log('set to ', team2_score);
     team2_name = team;
 
   });
 }
 
+var get_full_name = {
+ "ATL": "Atlanta Hawks",
+ "BKN": "Brooklyn Nets",
+ "BOS": "Boston Celtics",
+ "CHA": "Charolette Hornets",
+ "CHI": "Chicago Bulls",
+ "CLE": "Cleveland Caveliers",
+ "DAL": "Dallas Mavericks",
+ "DEN": "Denver Nuggets",
+ "DET": "Detroit Pistons",
+ "GSW": "Golden State Warriors",
+ "HOU": "Houston Rockets",
+ "IND": "Indiana Pacers",
+ "LAC": "Los Angeles Clippers",
+ "LAL": "Los Angeles Lakers",
+ "MEM": "Memphis Grizzlies",
+ "MIA": "Miami Heat",
+ "MIL": "Milwaukee Bucks",
+ "MIN": "Minnesota Timberwolves",
+ "NOP": "New Orleans Pelicans",
+ "NYK": "New York Knicks",
+ "OKC": "Oklahoma City Thunder",
+ "ORL": "Orlando Magic",
+ "PHI": "Philedelphia 76ers",
+ "PHX": "Phoenix Suns",
+ "POR": "Portland Trail Blazers",
+ "SAC": "Sacramento Kings",
+ "SAS": "San Antonio Spurs",
+ "TOR": "Toronto Raptors",
+ "UTA": "Utah Jazz",
+ "WAS": "Washington Wizards"
+};
+
 function winningteam() {
+  console.log('t1s: ', team1_score);
+  console.log('t2s: ', team2_score);
+
   if (team1_score >= team2_score) {
     winningteam = team1_name;
   } else {
@@ -66,8 +106,11 @@ function winningteam() {
 
   var PANELwinning = d3.select("#winningteam");
   PANELwinning.html("");
-  PANELwinning.html(`<img src={{url_for('static', filename='img/logos/${winningteam}_logo.png')}}>`);
-  PANELwinning.append("h2").text(winningteam);
+  PANELwinning.append("img")
+    .attr("src",'../static/img/logos/' + winningteam + '_logo.svg')
+    .attr("width", 500)
+    .attr("height", 500);
+  PANELwinning.append("h2").text(get_full_name[winningteam]);
 }
 
 function init() {
@@ -95,7 +138,6 @@ function optionChanged(newTeam) {
 }
 function optionChanged2(newTeam2) {
   playerStats2(newTeam2);
-  winningteam();
 }
 
 init();

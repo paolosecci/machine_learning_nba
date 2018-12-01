@@ -70,10 +70,20 @@
       </div>
     </header>
 
+    <style type="text/css">
+      #selDataset2{
+        float: right;
+      }
+    </style>
+
     <!-- Main Content -->
     <div class="container">
       <div class="row">
         <h1 class="col-lg-8 col-md-10 mx-auto" align="center">Select 2 Teams</h1>
+      </div>
+      <br>
+      <div align="center">
+        <button id="calc" onclick="winningteam();">Calculate</button>
       </div>
       <br>
       <div class="row">
@@ -96,9 +106,10 @@
         </div>
         <div class="col-lg-6 col-md-6 mx-auto">
           <select id="selDataset2" onchange="optionChanged2(this.value)"></select>
+          <br>
           <div class="panel panel-primary">
             <div class="panel-heading">
-              <h4 class="panel-title">Player Projected Stats</h4>
+              <h4 class="panel-title" align="right">Player Projected Stats</h4>
             </div>
             <div class="row">
               <div id="player-name2" class="col-lg-6 col-md-6 panel-body"></div>
@@ -106,17 +117,17 @@
             </div>
             <br>
             <div class="panel-heading">
-              <h4 class="panel-title">Team Projected Score</h4>
+              <h4 class="panel-title" align="right">Team Projected Score</h4>
             </div>
-            <div id="team-data2" class="panel-body"></div>
+            <div id="team-data2" class="panel-body" align="right"></div>
           </div>
         </div>
       </div>
       <br>
       <div class="row">
-        <h1 class="col-lg-8 col-md-10 mx-auto">The Winning Team is...</h1>
+        <h1 class="col-lg-8 col-md-10 mx-auto" align="center">The Winning Team is...</h1>
       </div>
-      <div id="winningteam" class="panel-body">
+      <div id="winningteam" class="panel-body" align="center">
       </div>
 
 
