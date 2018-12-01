@@ -9,10 +9,10 @@ function playerStats(team) {
     PANEL.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
-    Object.entries(data).forEach((player) => {
+    Object.entries(data[1]).forEach((player) => {
         PANELname.append("h6").text(`${player[1]['NAME']}`);
     });
-    Object.entries(data).forEach((player) => {
+    Object.entries(data[1]).forEach((player) => {
         PANEL.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
   });
@@ -29,10 +29,10 @@ function playerStats2(team) {
     PANEL2.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
-    Object.entries(data).forEach((player) => {
+    Object.entries(data[1]).forEach((player) => {
       PANEL2name.append("h6").text(`${player[1]['NAME']}`);
     });
-    Object.entries(data).forEach((player) => {
+    Object.entries(data[1]).forEach((player) => {
       PANEL2.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
   });

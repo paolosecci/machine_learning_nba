@@ -143,14 +143,18 @@ def predict(team):
     team_df = get_team_df(team, df)
     team_lineup = predict_lineup(team_df)
     p_json_out = []
+    sum_pts = 0
     for player in team_lineup:
+        p_pts = predict_stat(player, 'PTS', team_df)
         p_json_out.append({
             'NAME': player,
-            'PTS': predict_stat(player, 'PTS', team_df),
+            'PTS': p_pts,
             'AST': predict_stat(player, 'AST', team_df),
             'REB': predict_stat(player, 'REB', team_df)
         })
-    return jsonify(p_json_out)
+        sum_pts += p_pts
+    json_out = [sum_pts, p_json_out]
+    return jsonify(json_out)
     
 
 if __name__ == "__main__":
