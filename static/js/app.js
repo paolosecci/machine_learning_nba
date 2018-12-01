@@ -1,5 +1,20 @@
+// function playerStats(team) {
+//   d3.json(`/${team}/players`).then((data) => {
+//     // Use d3 to select the panel with id of `#player-data`
+//     var PANEL = d3.select("#player-data");
+
+//     // Use `.html("") to clear any existing metadata
+//     PANEL.html("");
+
+//     // Use `Object.entries` to add each key and value pair to the panel
+//     Object.entries(data).forEach((player) => {
+//         PANEL.append("h6").text(`${player[1]}`);
+//     });
+//   });
+// }
+
 function playerStats(team) {
-  d3.json(`/${team}/players`).then((data) => {
+  d3.json(`/predict/${team}`).then((data) => {
     // Use d3 to select the panel with id of `#player-data`
     var PANEL = d3.select("#player-data");
 
@@ -7,15 +22,29 @@ function playerStats(team) {
     PANEL.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
-    Object.entries(data).forEach((player) => {
-        console.log(player[1])
-        //PANEL.append("h6").text(`${player[1]}`);
+    Object.entries(data).forEach(([key, value]) => {
+        PANEL.append("h6").text(`${key}: ${value}`);
     });
   });
 }
 
+// function playerStats2(team) {
+//   d3.json(`/${team}/players`).then((data) => {
+//     // Use d3 to select the panel with id of `#player-data`
+//     var PANEL2 = d3.select("#player-data2")
+
+//     // Use `.html("") to clear any existing metadata
+//     PANEL2.html("");
+
+//     // Use `Object.entries` to add each key and value pair to the panel
+//     Object.entries(data).forEach((player) => {
+//       PANEL2.append("h6").text(`${player[1]}`);
+//     });
+//   });
+// }
+
 function playerStats2(team) {
-  d3.json(`/${team}/players`).then((data) => {
+  d3.json(`/predict/${team}`).then((data) => {
     // Use d3 to select the panel with id of `#player-data`
     var PANEL2 = d3.select("#player-data2")
 
@@ -23,8 +52,8 @@ function playerStats2(team) {
     PANEL2.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
-    Object.entries(data).forEach((player) => {
-      PANEL2.append("h6").text(`${player[1]}`);
+    Object.entries(data).forEach(([key, value]) => {
+      PANEL2.append("h6").text(`${key}: ${value}`);
     });
   });
 }

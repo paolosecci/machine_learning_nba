@@ -118,7 +118,7 @@ def get_teams():
         team_list.append(team)
     return jsonify(team_list)
 
-@app.route("predict/<team>")
+@app.route("/predict/<team>")
 def predict(team):
     nba_json = get_data()
     df = clean_df(make_json_df(nba_json))
