@@ -69,6 +69,7 @@ def predict_stat(player, stat, df):
     for num_days in player_df['DAYS_SINCE_RN']:
         importance = ((sum_days - num_days)/sum_days)
         importances.append(importance**3)
+    sum_days
     stat_ser = player_df[stat]
     stats = []
     for stat in stat_ser:
@@ -83,7 +84,7 @@ def predict_stat(player, stat, df):
     if (sum_importance == 0):
         return sum(scores)
     else:
-        p_stat = sum(scores)/sum_days
+        p_stat = sum(scores)/sum_importance
         return round(p_stat, 3)
     
 def predict_lineup(team_df):
