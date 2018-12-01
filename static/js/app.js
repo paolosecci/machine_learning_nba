@@ -1,10 +1,10 @@
 function playerStats(team) {
   d3.json(`/predict/${team}`).then((data) => {
-    // Use d3 to select the panel with id of `#player-data`
+    // Use d3 to select the panel
     var PANELname = d3.select("#player-name");
     var PANEL = d3.select("#player-data");
 
-    // Use `.html("") to clear any existing metadata
+    // Use `.html("") to clear any existing data
     PANELname.html("");
     PANEL.html("");
 
@@ -20,11 +20,11 @@ function playerStats(team) {
 
 function playerStats2(team) {
   d3.json(`/predict/${team}`).then((data) => {
-    // Use d3 to select the panel with id of `#player-data`
+    // Use d3 to select the panel
     var PANEL2name = d3.select("#player-name2");
     var PANEL2 = d3.select("#player-data2");
 
-    // Use `.html("") to clear any existing metadata
+    // Use `.html("") to clear any existing data
     PANEL2name.html("");
     PANEL2.html("");
 
@@ -37,6 +37,30 @@ function playerStats2(team) {
     });
   });
 }
+
+// function teamStats(team) {
+//   d3.json(`!!!!!!!!!!!`).then((data) => {
+//     // Use d3 to select the panel
+//     var PANELteam = d3.select("#team-data");
+
+//     // Use `.html("") to clear any existing data
+//     PANELteam.html("");
+
+//     PANELteam.append("h6").text(`PTS: REB: AST: `);
+//   });
+// }
+
+// function teamStats2(team) {
+//   d3.json(`!!!!!!!!!!!`).then((data) => {
+//     // Use d3 to select the panel
+//     var PANELteam2 = d3.select("#team-data2");
+
+//     // Use `.html("") to clear any existing data
+//     PANELteam2.html("");
+
+//     PANELteam2.append("h6").text(`PTS: REB: AST: `);
+//   });
+// }
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -60,9 +84,11 @@ function init() {
 
 function optionChanged(newTeam) {
   playerStats(newTeam);
+  teamStats(newTeam);
 }
 function optionChanged2(newTeam2) {
   playerStats2(newTeam2);
+  teamStats2(newTeam2);
 }
 
 init();
