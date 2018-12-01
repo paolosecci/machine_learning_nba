@@ -77,26 +77,32 @@
       </div>
       <br>
       <div class="row">
-        <div class="col-md-6 mx-auto">
+        <div class="col-lg-6 col-md-6 mx-auto">
           <select id="selDataset" onchange="optionChanged(this.value)"></select>
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h4 class="panel-title">Players</h4>
             </div>
-            <div id="player-data" class="panel-body"></div>
+            <div class="row">
+              <div id="player-name" class="col-lg-6 col-md-6 panel-body"></div>
+              <div id="player-data" class="col-lg-6 col-md-6 panel-body"></div>
+            </div>
             <br>
             <div class="panel-heading">
               <h4 class="panel-title">Team</h4>
             </div>
           </div>
         </div>
-        <div class="col-md-6 mx-auto">
+        <div class="col-lg-6 col-md-6 mx-auto">
           <select id="selDataset2" onchange="optionChanged2(this.value)"></select>
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h4 class="panel-title">Players</h4>
             </div>
-            <div id="player-data2" class="panel-body"></div>
+            <div class="row">
+              <div id="player-name2" class="col-lg-6 col-md-6 panel-body"></div>
+              <div id="player-data2" class="col-lg-6 col-md-6 panel-body"></div>
+            </div>
             <br>
             <div class="panel-heading">
               <h4 class="panel-title">Team</h4>
@@ -104,6 +110,7 @@
           </div>
         </div>
       </div>
+      <br>
       <div class="row">
         <h1 class="col-lg-8 col-md-10 mx-auto">Our model predicts that...will win the next game</h1>
       </div>
