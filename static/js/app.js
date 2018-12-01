@@ -1,14 +1,19 @@
 function playerStats(team) {
   d3.json(`/predict/${team}`).then((data) => {
     // Use d3 to select the panel with id of `#player-data`
+    var PANELname = d3.select("#player-name");
     var PANEL = d3.select("#player-data");
 
     // Use `.html("") to clear any existing metadata
+    PANELname.html("");
     PANEL.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data).forEach((player) => {
-        PANEL.append("h6").text(`${player[1]['NAME']} PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
+        PANELname.append("h6").text(`${player[1]['NAME']}`);
+    });
+    Object.entries(data).forEach((player) => {
+        PANEL.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
   });
 }
@@ -16,14 +21,19 @@ function playerStats(team) {
 function playerStats2(team) {
   d3.json(`/predict/${team}`).then((data) => {
     // Use d3 to select the panel with id of `#player-data`
-    var PANEL2 = d3.select("#player-data2")
+    var PANEL2name = d3.select("#player-name2");
+    var PANEL2 = d3.select("#player-data2");
 
     // Use `.html("") to clear any existing metadata
+    PANEL2name.html("");
     PANEL2.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data).forEach((player) => {
-      PANEL2.append("h6").text(`${player[1]['NAME']} PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
+      PANEL2name.append("h6").text(`${player[1]['NAME']}`);
+    });
+    Object.entries(data).forEach((player) => {
+      PANEL2.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
   });
 }
