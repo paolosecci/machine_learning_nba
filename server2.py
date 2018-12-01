@@ -85,7 +85,7 @@ def predict_stat(player, stat, df):
         return sum(scores)
     else:
         p_stat = sum(scores)/sum_importance
-        return round(p_stat, 3)
+        return round(p_stat, 2)
     
 def predict_lineup(team_df):
     lineup_df = team_df[team_df['DAYS_SINCE_RN']<=7]
