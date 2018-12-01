@@ -3,10 +3,12 @@ function playerStats(team) {
     // Use d3 to select the panel
     var PANELname = d3.select("#player-name");
     var PANEL = d3.select("#player-data");
+    var PANELteam = d3.select("#team-data");
 
     // Use `.html("") to clear any existing data
     PANELname.html("");
     PANEL.html("");
+    PANELteam.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data[1]).forEach((player) => {
@@ -15,6 +17,7 @@ function playerStats(team) {
     Object.entries(data[1]).forEach((player) => {
         PANEL.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
+    PANELteam.append("h2").text(data[0]);
   });
 }
 
@@ -23,10 +26,12 @@ function playerStats2(team) {
     // Use d3 to select the panel
     var PANEL2name = d3.select("#player-name2");
     var PANEL2 = d3.select("#player-data2");
+    var PANEL2team = d3.select("#team-data2");
 
     // Use `.html("") to clear any existing data
     PANEL2name.html("");
     PANEL2.html("");
+    PANEL2team.html("");
 
     // Use `Object.entries` to add each key and value pair to the panel
     Object.entries(data[1]).forEach((player) => {
@@ -35,32 +40,9 @@ function playerStats2(team) {
     Object.entries(data[1]).forEach((player) => {
       PANEL2.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
+    PANEL2team.append("h2").text(data[0]);
   });
 }
-
-// function teamStats(team) {
-//   d3.json(`!!!!!!!!!!!`).then((data) => {
-//     // Use d3 to select the panel
-//     var PANELteam = d3.select("#team-data");
-
-//     // Use `.html("") to clear any existing data
-//     PANELteam.html("");
-
-//     PANELteam.append("h6").text(`PTS: REB: AST: `);
-//   });
-// }
-
-// function teamStats2(team) {
-//   d3.json(`!!!!!!!!!!!`).then((data) => {
-//     // Use d3 to select the panel
-//     var PANELteam2 = d3.select("#team-data2");
-
-//     // Use `.html("") to clear any existing data
-//     PANELteam2.html("");
-
-//     PANELteam2.append("h6").text(`PTS: REB: AST: `);
-//   });
-// }
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -84,11 +66,9 @@ function init() {
 
 function optionChanged(newTeam) {
   playerStats(newTeam);
-  teamStats(newTeam);
 }
 function optionChanged2(newTeam2) {
   playerStats2(newTeam2);
-  teamStats2(newTeam2);
 }
 
 init();
