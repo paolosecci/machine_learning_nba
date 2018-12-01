@@ -65,7 +65,6 @@ def predict_stat(player, stat, df):
     sum_days = 0
     for num_days in player_df['DAYS_SINCE_RN']:
         sum_days += num_days
-    sum_days
     importances = []
     for num_days in player_df['DAYS_SINCE_RN']:
         importance = ((sum_days - num_days)/sum_days)
@@ -81,8 +80,11 @@ def predict_stat(player, stat, df):
     sum_importance = 0
     for imp in importances:
         sum_importance += imp
-    p_stat = sum(scores)/sum_importance
-    return round(p_stat, 3)
+    if (sum_importance == 0):
+        return sum(scores)
+    else:
+        p_stat = sum(scores)/sum_days
+        return round(p_stat, 3)
 
 @app.route("/")
 def index():
