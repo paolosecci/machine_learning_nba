@@ -125,15 +125,14 @@ def predict(team):
     df = make_days_since_col(df)
     team_df = get_team_df(team, df)
     players = team_df['PLAYER_NAME'].unique()
-    
     p_json_out = []
     for player in players:
-        p_json_out.append({ player: {
+        p_json_out.append({
+            'NAME': player,
             'PTS': predict_stat(player, 'PTS', team_df),
             'AST': predict_stat(player, 'AST', team_df),
             'REB': predict_stat(player, 'REB', team_df)
-        }})
-        
+        })
     return jsonify(p_json_out)
     
 
