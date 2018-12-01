@@ -1,3 +1,8 @@
+var team1_score = 0;
+var team1_name = "";
+var team2_score = 0;
+var team2_name = "";
+
 function playerStats(team) {
   d3.json(`/predict/${team}`).then((data) => {
     // Use d3 to select the panel
@@ -18,6 +23,10 @@ function playerStats(team) {
         PANEL.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
     PANELteam.append("h2").text(data[0]);
+
+    team1_score = data[0];
+    team1_name = team;
+
   });
 }
 
@@ -41,7 +50,24 @@ function playerStats2(team) {
       PANEL2.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
     PANEL2team.append("h2").text(data[0]);
+
+    team2_score = data[0];
+    team2_name = team;
+
   });
+}
+
+function winningteam() {
+  if (team1_score >= team2_score) {
+    winningteam = team1_name;
+  } else {
+    winningteam = team2_name;
+  }
+
+  var PANELwinning = d3.select("#winningteam");
+  PANELwinning.html("");
+  PANELwinning.html(`<img src={{url_for('static', filename='img/logos/${winningteam}_logo.png')}}>`);
+  PANELwinning.append("h2").text(winningteam);
 }
 
 function init() {
@@ -69,6 +95,7 @@ function optionChanged(newTeam) {
 }
 function optionChanged2(newTeam2) {
   playerStats2(newTeam2);
+  winningteam();
 }
 
 init();
