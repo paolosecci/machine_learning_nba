@@ -85,6 +85,20 @@ def predict_stat(player, stat, df):
     else:
         p_stat = sum(scores)/sum_days
         return round(p_stat, 3)
+    
+def predict_lineup(team_df):
+    lineup_df = team_df[team_df['DAYS_SINCE_RN']<=7]
+    players = lineup_df['PLAYER_NAME'].unique()
+    lineup_out = {}
+    for player in players:
+        player_df = lineup_df[lineup_df['PLAYER_NAME'] == player]
+        lineup_out[player] = player_df['MIN'].mean()
+    import operator
+    line_up_sorted_12 = list(reversed(sorted(lineup_out.items(), key=operator.itemgetter(1))))[:12]
+    lineup = []
+    for obj in line_up_sorted_12:
+        lineup.append(obj[0])
+    return lineup
 
 @app.route("/")
 def index():
@@ -126,9 +140,9 @@ def predict(team):
     df = clean_df(make_json_df(nba_json))
     df = make_days_since_col(df)
     team_df = get_team_df(team, df)
-    players = team_df['PLAYER_NAME'].unique()
+    team_lineup = predict_lineup(team_df)
     p_json_out = []
-    for player in players:
+    for player in team_lineup:
         p_json_out.append({
             'NAME': player,
             'PTS': predict_stat(player, 'PTS', team_df),
