@@ -111,7 +111,7 @@ function winningteam() {
     .attr("width", 500)
     .attr("height", 500);
   PANELwinning.append("h2").text(get_full_name[winningteam]);
-}
+};
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -140,4 +140,6 @@ function optionChanged2(newTeam2) {
   playerStats2(newTeam2);
 }
 
+d3.selectAll("#calc").on("click", winningteam);
+  
 init();
