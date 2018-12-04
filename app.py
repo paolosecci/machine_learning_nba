@@ -267,4 +267,4 @@ def sim_game(team1, team2):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
