@@ -22,7 +22,7 @@ function playerStats(team) {
     Object.entries(data[1]).forEach((player) => {
         PANEL.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
-    PANELteam.append("h2").text(data[0]);
+    PANELteam.append("h2").text('loading...');
 
     team1_score = data[0];
     team1_name = team;
@@ -49,13 +49,9 @@ function playerStats2(team) {
     Object.entries(data[1]).forEach((player) => {
       PANEL2.append("h6").text(`PTS: ${player[1]['PTS']} REB: ${player[1]['REB']} AST: ${player[1]['AST']}`);
     });
-    PANEL2team.append("h2").text(data[0]);
-
-    console.log('setting ', team, ' score');
+    PANEL2team.append("h2").text('loading...');
 
     team2_score = data[0];
-
-    console.log('set to ', team2_score);
     team2_name = team;
 
   });
@@ -95,6 +91,19 @@ var get_full_name = {
 };
 
 function winningteam() {
+  d3.json(`/simgame/${team1_name}/${team2_name}`).then((data) => {
+
+    console.log(team1_name, ': ', data[0]);
+    console.log(team2_name, ': ', data[1]);
+    team1_score = data[0];
+    team2_score = data[1];
+
+    var PANELteam = d3.select("#team-data");
+    var PANEL2team = d3.select("#team-data2");
+    PANELteam.append("h2").text(team1_score);
+    PANEL2team.append("h2").text(team2_score);
+  });
+
   console.log('t1s: ', team1_score);
   console.log('t2s: ', team2_score);
 
@@ -141,5 +150,5 @@ function optionChanged2(newTeam2) {
 }
 
 d3.selectAll("#calc").on("click", winningteam);
-  
+
 init();
