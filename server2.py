@@ -4,14 +4,17 @@ import datetime
 
 app = Flask(__name__)
 
+import pandas as pd
+import datetime
+import requests
+import json
+this_user_agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'}
+
 #FUNCTIONS
 def get_data():
-    import requests
     nba_url = "https://stats.nba.com/stats/leaguegamelog?Counter=1000&DateFrom=&DateTo=&Direction=DESC&LeagueID=00&PlayerOrTeam=P&Season=2018-19&SeasonType=Regular+Season&Sorter=DATE"
-    this_user_agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
     re = requests.get(nba_url, headers=this_user_agent)
     print(re.status_code)
-    import json
     nba_json = json.loads(re.text)
     return nba_json
 
@@ -101,6 +104,59 @@ def predict_lineup(team_df):
         lineup.append(obj[0])
     return lineup
 
+def predict_team_stat(df, stat):
+    df
+    sum_days = 0
+    for num_days in df['DAYS_SINCE_RN']:
+        sum_days += num_days
+    importances = []
+    for num_days in df['DAYS_SINCE_RN']:
+        importance = ((sum_days - num_days)/sum_days)
+        importances.append(importance**4)
+    stat_ser = df[stat]
+    stats = []
+    for stat in stat_ser:
+        stats.append(int(stat))
+    scores = []
+    for i in range(len(stats)):
+        score = importances[i]*stats[i]
+        scores.append(score)
+    sum_importance = 0
+    for imp in importances:
+        sum_importance += imp
+    if (sum_importance == 0):
+        return sum(scores)
+    else:
+        p_stat = sum(scores)/sum_importance
+        return round(p_stat, 2)
+def predict_team(team_box_df, team):
+    opp_scores = []
+    for game_id in team_box_df['Game_ID']:
+        game_url = 'https://stats.nba.com/stats/boxscoresummaryv2?GameID=' + game_id
+        game_re = requests.get(game_url, headers=this_user_agent)
+        print(game_re, ' ::', game_id)
+        game_j = json.loads(game_re.text)
+        if game_j['resultSets'][5]['rowSet'][0][4] == team:
+            opp_pts = game_j['resultSets'][5]['rowSet'][1][22]
+            opp_scores.append(opp_pts)
+            print(opp_pts)
+        else:
+            opp_pts = game_j['resultSets'][5]['rowSet'][0][22]
+            opp_scores.append(opp_pts)
+            print(opp_pts)
+    team_box_df['OPP_pts'] = opp_scores
+    pts_list = []
+    for pts in team_box_df['PTS']:
+        pts_list.insert(0, pts)
+    team_box_df['pts_r'] = pts_list
+    o_pts_list = []
+    for o_pts in team_box_df['OPP_pts']:
+        o_pts_list.insert(0, o_pts)
+    team_box_df['o_pts_r'] = o_pts_list
+    predicted_pts = team_box_df['pts_r'].ewm(alpha=.5).mean().iloc[-1]
+    predicted_opp_pts = team_box_df['o_pts_r'].ewm(alpha=.5).mean().iloc[-1]
+    return {'predicted_pts': predicted_pts, 'predicted_opp_pts': predicted_opp_pts}
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -109,21 +165,21 @@ def index():
 def get_nba_json():
     return jsonify(get_data())
 
-@app.route("/<team_abbr>/data")
-def get_team_data(team_abbr):
-    return jsonify(get_team_json(team_abbr))
+# @app.route("/<team_abbr>/data")
+# def get_team_data(team_abbr):
+#     return jsonify(get_team_json(team_abbr))
 
-@app.route("/<team_abbr>/players")
-def get_team_players(team_abbr):
-    nba_json = get_data()
-    df = clean_df(make_json_df(nba_json))
-    df = make_days_since_col(df)
-    team_df = get_team_df(team_abbr, df)
-    players = team_df['PLAYER_NAME'].unique()
-    player_list = []
-    for player in players:
-        player_list.append(player)
-    return jsonify(player_list)
+# @app.route("/<team_abbr>/players")
+# def get_team_players(team_abbr):
+#     nba_json = get_data()
+#     df = clean_df(make_json_df(nba_json))
+#     df = make_days_since_col(df)
+#     team_df = get_team_df(team_abbr, df)
+#     players = team_df['PLAYER_NAME'].unique()
+#     player_list = []
+#     for player in players:
+#         player_list.append(player)
+#     return jsonify(player_list)
 
 @app.route("/get_teams")
 def get_teams():
@@ -155,6 +211,59 @@ def predict(team):
         sum_pts += p_pts
     json_out = [sum_pts, p_json_out]
     return jsonify(json_out)
+
+@app.route('/simgame/<team1>/<team2>')
+def sim_game(team1, team2):
+    api_dict = {
+        'WAS': '1610612764',
+        'NYK': '1610612752',
+        'NOP': '1610612740',
+        'LAC': '1610612746',
+        'CLE': '1610612739',
+        'BKN': '1610612751',
+        'TOR': '1610612761',
+        'DEN': '1610612743',
+        'MIN': '1610612750',
+        'HOU': '1610612745',
+        'ATL': '1610612737',
+        'GSW': '1610612744',
+        'OKC': '1610612760',
+        'DET': '1610612765',
+        'CHA': '1610612766',
+        'PHX': '1610612756',
+        'LAL': '1610612747',
+        'DAL': '1610612742',
+        'SAS': '1610612759',
+        'POR': '1610612757',
+        'MEM': '1610612763',
+        'PHI': '1610612755',
+        'UTA': '1610612762',
+        'MIA': '1610612748',
+        'IND': '1610612754',
+        'SAC': '1610612758',
+        'BOS': '1610612738',
+        'CHI': '1610612741',
+        'MIL': '1610612749',
+        'ORL': '1610612753'
+    }
+    home_url = 'https://stats.nba.com/stats/teamgamelog?DateFrom=&DateTo=&LeagueID=00&Season=2018-19&SeasonType=Regular+Season&TeamID=' + api_dict[team1]
+    away_url = 'https://stats.nba.com/stats/teamgamelog?DateFrom=&DateTo=&LeagueID=00&Season=2018-19&SeasonType=Regular+Season&TeamID=' + api_dict[team2]
+    this_user_agent = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
+    home_re = requests.get(home_url, headers=this_user_agent)
+    away_re = requests.get(away_url, headers=this_user_agent)
+    home_j = json.loads(home_re.text)
+    away_j = json.loads(away_re.text)
+    h_headers = home_j['resultSets'][0]['headers']
+    h_data = home_j['resultSets'][0]['rowSet']
+    one_df = pd.DataFrame(h_data, columns=h_headers)
+    a_headers = away_j['resultSets'][0]['headers']
+    a_data = away_j['resultSets'][0]['rowSet']
+    two_df = pd.DataFrame(a_data, columns=a_headers)
+    p1 = predict_team(one_df, team1)
+    p2 = predict_team(two_df, team2)
+    t1_p = (p1['predicted_pts']+p2['predicted_opp_pts'])/2
+    t2_p = (p2['predicted_pts']+p1['predicted_opp_pts'])/2
+    return jsonify([round(t1_p, 2), round(t2_p, 2)])
 
 
 if __name__ == "__main__":
