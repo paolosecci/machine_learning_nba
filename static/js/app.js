@@ -99,27 +99,30 @@ function winningteam() {
     team2_score = data[1];
 
     var PANELteam = d3.select("#team-data");
+    PANELteam.html("");
     var PANEL2team = d3.select("#team-data2");
+    PANEL2team.html("");
+    
     PANELteam.append("h2").text(team1_score);
     PANEL2team.append("h2").text(team2_score);
+
+    if (team1_score >= team2_score) {
+    winningteam = team1_name;
+    } else {
+      winningteam = team2_name;
+    }
+
+    var PANELwinning = d3.select("#winningteam");
+    PANELwinning.html("");
+    PANELwinning.append("img")
+      .attr("src",'../static/img/logos/' + winningteam + '_logo.svg')
+      .attr("width", 500)
+      .attr("height", 500);
+    PANELwinning.append("h2").text(get_full_name[winningteam]);
   });
 
   console.log('t1s: ', team1_score);
   console.log('t2s: ', team2_score);
-
-  if (team1_score >= team2_score) {
-    winningteam = team1_name;
-  } else {
-    winningteam = team2_name;
-  }
-
-  var PANELwinning = d3.select("#winningteam");
-  PANELwinning.html("");
-  PANELwinning.append("img")
-    .attr("src",'../static/img/logos/' + winningteam + '_logo.svg')
-    .attr("width", 500)
-    .attr("height", 500);
-  PANELwinning.append("h2").text(get_full_name[winningteam]);
 };
 
 function init() {
